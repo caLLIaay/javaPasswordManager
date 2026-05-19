@@ -1,9 +1,11 @@
 package project;
 
 
+import java.io.IOException;
+
 public class Main {
     public static void main(String[] args) {
-        Account firstAccount = new Account("google.com", "alex", "IchBinCaLLIaa");
+        Account firstAccount = new Account("google.com", "alex", "agdgfhghzs3546");
         Account secondAccount = new Account("youtube.com", "boton", "le5adsfdfg5");
         Account thirdAccount = new Account("openai.com", "btwimkafuu", "peiwrgejlgnf");
 
@@ -41,6 +43,12 @@ public class Main {
             service.findBySite("chatgpt.com");
         } catch (AccountNotFoundException accountNotFoundException) {
             System.out.println("ERROR: " + accountNotFoundException.getMessage());
+        }
+
+        try {
+            service.saveAccountsToFile("accounts.txt");
+        } catch (IOException ioException) {
+            System.out.println("ERROR:" + ioException.getMessage());
         }
     }
 
