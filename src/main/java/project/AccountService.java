@@ -1,20 +1,16 @@
 package project;
 
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class AccountService {
 
     private final ArrayList<Account> accountsList = new ArrayList<>();
 
     public void addAccount(Account account) {
-
         String accountPassword = account.getUserPassword();
 
         if (accountPassword.length() < 8) {
-
             throw new InvalidPasswordException(
                     "Account registered on the website: " +
                             account.getSiteName() +
@@ -25,6 +21,12 @@ public class AccountService {
         }
 
         accountsList.add(account);
+    }
+
+    public void addAccount(ArrayList<Account> accountsToAdd) {
+        for(Account account : accountsToAdd) {
+            addAccount(account);
+        }
     }
 
     public Account findBySite(String site)
@@ -45,9 +47,7 @@ public class AccountService {
     }
 
     public void showAllAccounts() {
-
         int accountNumber = 1;
-
         for (Account account : accountsList) {
 
             System.out.println("Account №" + accountNumber);
@@ -80,4 +80,15 @@ public class AccountService {
                 "Accounts were successfully saved to: " + filePath
         );
     }
+
+
+    public void logWriter(String pathToFile, String message) {
+        try (Writer writer = new FileWriter(pathToFile)) {
+            writer.append(message, 0, message.length());
+        } catch (IOException ioException) {
+            System.out.println(ioException.getMessage());
+        }
+    }
+
 }
+

@@ -1,55 +1,27 @@
 package project;
 
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        Account firstAccount = new Account("google.com", "alex", "agdgfhghzs3546");
-        Account secondAccount = new Account("youtube.com", "boton", "le5adsfdfg5");
-        Account thirdAccount = new Account("openai.com", "btwimkafuu", "peiwrgejlgnf");
-
+        final String pathToFile = "data.txt";
+        final String pathToLogFile = "log.txt";
+        AccountFileReader reader = new AccountFileReader(pathToFile);
         AccountService service = new AccountService();
+
+        System.out.println("=============================\n");
         try {
-            service.addAccount(firstAccount);
-
-        } catch (InvalidPasswordException invalidPasswordException) {
-            System.out.println("ERROR: " + invalidPasswordException.getMessage());
-        }
-
-        try {
-            service.addAccount(secondAccount);
-        } catch (InvalidPasswordException invalidPasswordException) {
-            System.out.println("ERROR: " + invalidPasswordException.getMessage());
-        }
-
-        try {
-            service.addAccount(thirdAccount);
-        } catch (InvalidPasswordException invalidPasswordException) {
-            System.out.println("ERROR: " + invalidPasswordException.getMessage());
-        }
-        service.showAllAccounts();
-
-        try {
-           Account accountFoundBySite = service.findBySite("openai.com");
-           System.out.println("Account registered on website " + accountFoundBySite.getSiteName() + " was found!");
-           System.out.println(accountFoundBySite);
-        } catch (AccountNotFoundException accountNotFoundException) {
-            System.out.println("ERROR: " + accountNotFoundException.getMessage());
-        }
-
-
-        try {
-            service.findBySite("chatgpt.com");
-        } catch (AccountNotFoundException accountNotFoundException) {
-            System.out.println("ERROR: " + accountNotFoundException.getMessage());
-        }
-
-        try {
-            service.saveAccountsToFile("accounts.txt");
+            ArrayList<Account> tempAccountList = reader.readAccountsFromFile();
+            service.addAccount(tempAccountList);
         } catch (IOException ioException) {
-            System.out.println("ERROR:" + ioException.getMessage());
+            String logMessage = "ERROR: " + ioException.getMessage();
+            service.logWriter(pathToLogFile, logMessage);
         }
-    }
 
+        service.showAllAccounts();
+    }
 }
